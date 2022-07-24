@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MidiBard.HSC
+namespace HSC.HSC
 {
     public class SharedMemory
     {

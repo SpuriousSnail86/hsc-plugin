@@ -3,27 +3,35 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dalamud.Logging;
 using Melanchall.DryWetMidi.Interaction;
-using MidiBard.Control.CharacterControl;
-using static MidiBard.MidiBard;
-using MidiBard.Managers;
+using HSC.Control.CharacterControl;
+using static HSC.HSC;
+using HSC.Managers;
 using System.Collections.Generic;
 using FFXIVClientStructs.FFXIV.Client.Game.Group;
+using HSC.Config;
+using HSC.Common;
+using HSC.IPC;
+using HSC.Models.Settings;
 
-namespace MidiBard.Control.MidiControl
+namespace HSC.Control.MidiControl
 {
+    
+/// <summary>
+/// author: akira045/Ori, modified by SpuriousSnail86
+/// </summary>
     internal static class MidiPlayerControl
     {
         internal static int playDeltaTime = 0;
         internal static int LRCDeltaTime = 0;
 
-        public enum e_stat
+        public enum PlaybackStatus
         {
             Stopped,
             Paused,
             Playing
         }
 
-        public static e_stat _stat = e_stat.Stopped;
+        public static PlaybackStatus playbackStatus = PlaybackStatus.Stopped;
         public static int LrcIdx = -1;
         public static bool IsLeader;
 
@@ -38,7 +46,7 @@ namespace MidiBard.Control.MidiControl
         {
             try
             {
-                if (_stat != e_stat.Playing)
+                if (playbackStatus != PlaybackStatus.Playing)
                 {
                     return;
                 }
@@ -75,7 +83,7 @@ namespace MidiBard.Control.MidiControl
                                 }
                             }
 
-                            MidiBard.Cbase.Functions.Chat.SendMessage(msg);
+                            HSC.Cbase.Functions.Chat.SendMessage(msg);
                         }
                         LrcIdx = idx;
                     }
@@ -109,12 +117,13 @@ namespace MidiBard.Control.MidiControl
 
         internal static void Play()
         {
-            playDeltaTime = 0;
-            LRCDeltaTime = 0;
-            if (CurrentPlayback != null)
+            try
             {
-                try
+                playDeltaTime = 0;
+                LRCDeltaTime = 0;
+                if (CurrentPlayback != null)
                 {
+
                     if (CurrentPlayback.GetCurrentTime<MidiTimeSpan>() == CurrentPlayback.GetDuration<MidiTimeSpan>())
                     {
                         CurrentPlayback.MoveToStart();
@@ -122,28 +131,30 @@ namespace MidiBard.Control.MidiControl
 
                     DoPlay();
                 }
-                catch (Exception e)
-                {
-                    PluginLog.Error(e, "error when try to start playing, maybe the playback has been disposed?");
-                }
-            }
-            else
-            {
-                if (!PlaylistManager.FilePathList.Any())
-                {
-                    PluginLog.Information("empty playlist");
-                    return;
-                }
 
-                if (PlaylistManager.CurrentPlaying < 0)
-                {
-                    SwitchSong(0, true);
-                }
                 else
                 {
-                    SwitchSong(PlaylistManager.CurrentPlaying, true);
+                    if (!Managers.PlaylistManager.FilePathList.Any())
+                    {
+                        PluginLog.Information("empty playlist");
+                        return;
+                    }
+
+                    if (Managers.PlaylistManager.CurrentPlaying < 0)
+                    {
+                        SwitchSong(0, true);
+                    }
+                    else
+                    {
+                        SwitchSong(Managers.PlaylistManager.CurrentPlaying, true);
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                PluginLog.Error(e, "error when try to start playing, maybe the playback has been disposed?");
+            }
+
         }
 
         public static void DoPlay()
@@ -155,44 +166,45 @@ namespace MidiBard.Control.MidiControl
 
             IsLeader = false;
 
-            if (Lrc.HasLyric())
-            {
-                if (DalamudApi.api.PartyList.Length > 1)
-                {
-                    // it seems the PartyLeaderIndex always == 0 after joined and leave a party, 
-                    var partyMemberAddr = DalamudApi.api.PartyList.GetPartyMemberAddress((int)DalamudApi.api.PartyList.PartyLeaderIndex);
-                    if (partyMemberAddr != IntPtr.Zero)
-                    {
-                        var partymember = DalamudApi.api.PartyList.CreatePartyMemberReference(partyMemberAddr);
-                        IsLeader = String.Compare(partymember.Name.TextValue, DalamudApi.api.ClientState.LocalPlayer.Name.TextValue) == 0;
-                    }
-                }
-                else
-                {
-                    DalamudApi.api.ChatGui.Print(String.Format("[MidiBard] Not in a party, Lyrics will not be posted."));
-                }
-            }
+            //if (Lrc.HasLyric())
+            //{
+            //    if (DalamudApi.api.PartyList.Length > 1)
+            //    {
+            //        // it seems the PartyLeaderIndex always == 0 after joined and leave a party, 
+            //        var partyMemberAddr = DalamudApi.api.PartyList.GetPartyMemberAddress((int)DalamudApi.api.PartyList.PartyLeaderIndex);
+            //        if (partyMemberAddr != IntPtr.Zero)
+            //        {
+            //            var partymember = DalamudApi.api.PartyList.CreatePartyMemberReference(partyMemberAddr);
+            //            IsLeader = String.Compare(partymember.Name.TextValue, DalamudApi.api.ClientState.LocalPlayer.Name.TextValue) == 0;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        DalamudApi.api.ChatGui.Print(String.Format("[MidiBard] Not in a party, Lyrics will not be posted."));
+            //    }
+            //}
 
             CurrentPlayback.Start();
-            try
-            {
-                LrcTimeStamps = Lrc._lrc.LrcWord.Keys.ToList();
-                if (_stat != e_stat.Paused)
-                {
-                    LrcIdx = -1;
-                }
-            }
-            catch (Exception e)
-            {
-                PluginLog.LogError(e.Message);
-            }
-            _stat = e_stat.Playing;
+            //try
+            //{
+            //    LrcTimeStamps = Lrc._lrc.LrcWord.Keys.ToList();
+            //    if (_stat != e_stat.Paused)
+            //    {
+            //        LrcIdx = -1;
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    PluginLog.LogError(e.Message);
+            //}
+            //_stat = e_stat.Playing;
+
         }
 
         internal static void Pause()
         {
+            playbackStatus = PlaybackStatus.Paused;
             CurrentPlayback?.Stop();
-            _stat = e_stat.Paused;
         }
 
 
@@ -212,7 +224,7 @@ namespace MidiBard.Control.MidiControl
             }
             else
             {
-                if (MidiBard.IsPlaying)
+                if (HSC.IsPlaying)
                 {
                     MidiPlayerControl.Pause();
                 }
@@ -221,12 +233,16 @@ namespace MidiBard.Control.MidiControl
                     MidiPlayerControl.Play();
                 }
             }
+
+
         }
 
         internal static void Stop()
         {
             try
             {
+                playbackStatus = PlaybackStatus.Stopped;
+
                 if (CurrentPlayback == null)
                 {
                     CurrentTracks.Clear();
@@ -244,17 +260,17 @@ namespace MidiBard.Control.MidiControl
             finally
             {
                 LrcIdx = -1;
-                _stat = e_stat.Stopped;
                 CurrentPlayback?.Dispose();
                 CurrentPlayback = null;
                 IsLeader = false;
             }
+
         }
 
         internal static void Next()
         {
             LrcIdx = -1;
-            _stat = e_stat.Stopped;
+            playbackStatus = PlaybackStatus.Stopped;
             if (CurrentPlayback != null)
             {
                 try
@@ -262,7 +278,7 @@ namespace MidiBard.Control.MidiControl
                     var playing = IsPlaying;
                     CurrentPlayback?.Dispose();
                     CurrentPlayback = null;
-                    int next = PlaylistManager.CurrentPlaying;
+                    int next = Managers.PlaylistManager.CurrentPlaying;
 
                     switch ((PlayMode)Configuration.config.PlayMode)
                     {
@@ -272,16 +288,16 @@ namespace MidiBard.Control.MidiControl
                             next += 1;
                             break;
                         case PlayMode.ListRepeat:
-                            next = (next + 1) % PlaylistManager.FilePathList.Count;
+                            next = (next + 1) % Managers.PlaylistManager.FilePathList.Count;
                             break;
                         case PlayMode.Random:
-                            if (PlaylistManager.FilePathList.Count > 1)
+                            if (Managers.PlaylistManager.FilePathList.Count > 1)
                             {
                                 var r = new Random();
                                 do
                                 {
-                                    next = r.Next(0, PlaylistManager.FilePathList.Count);
-                                } while (next == PlaylistManager.CurrentPlaying);
+                                    next = r.Next(0, Managers.PlaylistManager.FilePathList.Count);
+                                } while (next == Managers.PlaylistManager.CurrentPlaying);
                             }
                             break;
                     }
@@ -291,19 +307,19 @@ namespace MidiBard.Control.MidiControl
                 catch (Exception e)
                 {
                     CurrentPlayback = null;
-                    PlaylistManager.CurrentPlaying = -1;
+                    Managers.PlaylistManager.CurrentPlaying = -1;
                 }
             }
             else
             {
-                PlaylistManager.CurrentPlaying += 1;
+                Managers.PlaylistManager.CurrentPlaying += 1;
             }
         }
 
         internal static void Prev()
         {
             LrcIdx = -1;
-            _stat = e_stat.Stopped;
+            playbackStatus = PlaybackStatus.Stopped;
             if (CurrentPlayback != null)
             {
                 try
@@ -311,7 +327,7 @@ namespace MidiBard.Control.MidiControl
                     var playing = IsPlaying;
                     CurrentPlayback?.Dispose();
                     CurrentPlayback = null;
-                    int prev = PlaylistManager.CurrentPlaying;
+                    int prev = Managers.PlaylistManager.CurrentPlaying;
 
                     switch ((PlayMode)Configuration.config.PlayMode)
                     {
@@ -321,9 +337,9 @@ namespace MidiBard.Control.MidiControl
                             prev -= 1;
                             break;
                         case PlayMode.ListRepeat:
-                            if (PlaylistManager.CurrentPlaying == 0)
+                            if (Managers.PlaylistManager.CurrentPlaying == 0)
                             {
-                                prev = PlaylistManager.FilePathList.Count - 1;
+                                prev = Managers.PlaylistManager.FilePathList.Count - 1;
                             }
                             else
                             {
@@ -331,13 +347,13 @@ namespace MidiBard.Control.MidiControl
                             }
                             break;
                         case PlayMode.Random:
-                            if (PlaylistManager.FilePathList.Count > 1)
+                            if (Managers.PlaylistManager.FilePathList.Count > 1)
                             {
                                 var r = new Random();
                                 do
                                 {
-                                    prev = r.Next(0, PlaylistManager.FilePathList.Count);
-                                } while (prev == PlaylistManager.CurrentPlaying);
+                                    prev = r.Next(0, Managers.PlaylistManager.FilePathList.Count);
+                                } while (prev == Managers.PlaylistManager.CurrentPlaying);
                             }
                             break;
                     }
@@ -347,12 +363,12 @@ namespace MidiBard.Control.MidiControl
                 catch (Exception e)
                 {
                     CurrentPlayback = null;
-                    PlaylistManager.CurrentPlaying = -1;
+                    Managers.PlaylistManager.CurrentPlaying = -1;
                 }
             }
             else
             {
-                PlaylistManager.CurrentPlaying -= 1;
+                Managers.PlaylistManager.CurrentPlaying -= 1;
             }
         }
 
@@ -375,43 +391,48 @@ namespace MidiBard.Control.MidiControl
 
         public static void SetSpeed(float speed)
         {
-            Configuration.config.playSpeed = speed;
+            Configuration.config.PlaySpeed = speed;
             SetSpeed();
         }
 
         public static void SetSpeed()
         {
-            Configuration.config.playSpeed = Math.Max(0.1f, Configuration.config.playSpeed);
-            var currenttime = MidiBard.CurrentPlayback?.GetCurrentTime(TimeSpanType.Midi);
+            Configuration.config.PlaySpeed = Math.Max(0.1f, Configuration.config.PlaySpeed);
+            var currenttime = HSC.CurrentPlayback?.GetCurrentTime(TimeSpanType.Midi);
             if (currenttime is not null)
             {
-                MidiBard.CurrentPlayback.Speed = Configuration.config.playSpeed;
-                MidiBard.CurrentPlayback?.MoveToTime(currenttime);
+                HSC.CurrentPlayback.Speed = Configuration.config.PlaySpeed;
+                HSC.CurrentPlayback?.MoveToTime(currenttime);
             }
         }
 
         public static void SwitchSong(int index, bool startPlaying = false, bool switchInstruments = true)
         {
-            LrcIdx = -1;
-            _stat = e_stat.Stopped;
-            playDeltaTime = 0;
-            LRCDeltaTime = 0;
-            if (index < 0 || index >= PlaylistManager.FilePathList.Count)
+            try
             {
-                PluginLog.Error($"SwitchSong: invalid playlist index {index}");
-                return;
+                LrcIdx = -1;
+                playbackStatus = PlaybackStatus.Stopped;
+                playDeltaTime = 0;
+                LRCDeltaTime = 0;
+                if (index < 0 || index >= Managers.PlaylistManager.FilePathList.Count)
+                {
+                    PluginLog.Error($"SwitchSong: invalid playlist index {index}");
+                    return;
+                }
+
+                Managers.PlaylistManager.CurrentPlaying = index;
+                Task.Run(() => FilePlayback.LoadPlayback(Managers.PlaylistManager.CurrentPlaying, startPlaying, switchInstruments));
             }
-
-            PlaylistManager.CurrentPlaying = index;
-            Task.Run(async () =>
+            catch (Exception ex)
             {
-                await FilePlayback.LoadPlayback(PlaylistManager.CurrentPlaying, startPlaying, switchInstruments);
-            });
-        }
 
+            }
+        }
 
         internal static void ChangeTime(int hours, int mins, int secs)
         {
+
+
             if (CurrentPlayback == null || !CurrentPlayback.IsRunning)
             {
                 playDeltaTime = 0;
@@ -420,6 +441,22 @@ namespace MidiBard.Control.MidiControl
             }
 
             MetricTimeSpan newTime = new MetricTimeSpan(hours, mins, secs);
+            //PluginLog.LogDebug("newTime:" + newTime.TotalMicroseconds);
+            CurrentPlayback.MoveToTime(newTime);
+
+            playDeltaTime = newTime.Seconds;
+        }
+
+        internal static void ChangeTime(long ms)
+        {
+            if (CurrentPlayback == null || !CurrentPlayback.IsRunning)
+            {
+                playDeltaTime = 0;
+                LRCDeltaTime = 0;
+                return;
+            }
+
+            MetricTimeSpan newTime = new MetricTimeSpan(TimeSpan.FromMilliseconds(ms));
             //PluginLog.LogDebug("newTime:" + newTime.TotalMicroseconds);
             CurrentPlayback.MoveToTime(newTime);
 

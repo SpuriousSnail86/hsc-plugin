@@ -5,11 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Lumina.Excel.GeneratedSheets;
 using Melanchall.DryWetMidi.Common;
-using MidiBard.Util;
-using static MidiBard.MidiBard;
+using HSC.Util;
+using static HSC.HSC;
 
-namespace MidiBard.Control;
+namespace HSC.Control;
 
+/// <summary>
+/// author: akira045/Ori
+/// </summary>
 public class Instrument
 {
     public Instrument(Perform row)

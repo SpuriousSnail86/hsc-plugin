@@ -1,4 +1,4 @@
-﻿using MidiBard.Common.IPC;
+﻿using HSC.Common.IPC;
 using System;
 using System.Collections.Generic;
 using System.IO.Pipes;
@@ -7,7 +7,7 @@ using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MidiBard.Common.IPC
+namespace HSC.Common.IPC
 {
     public class NamedPipeServer<T> : NamedPipe<T> where T : class
     {

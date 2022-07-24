@@ -9,14 +9,17 @@ using Dalamud.Logging;
 using ImGuiNET;
 using static ImGuiNET.ImGui;
 
-namespace MidiBard;
+namespace HSC;
 
+/// <summary>
+/// author akira045/Ori
+/// </summary>
 public static class ImGuiUtil
 {
     public static bool EnumCombo<TEnum>(string label, ref TEnum @enum, string[] toolTips, ImGuiComboFlags flags = ImGuiComboFlags.None, bool showValue = false) where TEnum : struct, Enum
     {
         var ret = false;
-        var previewValue = showValue ? $"{@enum.ToString().Localize()} ({Convert.ChangeType(@enum, @enum.GetTypeCode())})" : @enum.ToString().Localize();
+        var previewValue = showValue ? $"{@enum.ToString()} ({Convert.ChangeType(@enum, @enum.GetTypeCode())})" : @enum.ToString();
         if (BeginCombo(label, previewValue, flags))
         {
             var values = Enum.GetValues<TEnum>();
@@ -25,8 +28,8 @@ public static class ImGuiUtil
                 {
                     PushID(i);
                     var s = showValue
-                        ? $"{values[i].ToString().Localize()} ({Convert.ChangeType(values[i], values[i].GetTypeCode())})"
-                        : values[i].ToString().Localize();
+                        ? $"{values[i].ToString()} ({Convert.ChangeType(values[i], values[i].GetTypeCode())})"
+                        : values[i].ToString();
                     if (Selectable(s, values[i].Equals(@enum)))
                     {
                         ret = true;
@@ -35,7 +38,7 @@ public static class ImGuiUtil
 
                     if (IsItemHovered())
                     {
-                        ToolTip(toolTips[i].Localize());
+                        ToolTip(toolTips[i]);
                     }
 
                     PopID();
@@ -171,7 +174,7 @@ public static class ImGuiUtil
     public static void AddNotification(NotificationType type, string content, string title = null)
     {
         PluginLog.Debug($"[Notification] {type}:{title}:{content}");
-        DalamudApi.api.PluginInterface.UiBuilder.AddNotification(content, string.IsNullOrWhiteSpace(title) ? "Midibard" : "Midibard: " + title, type, 5000);
+        DalamudApi.api.PluginInterface.UiBuilder.AddNotification(content, "HarpSEchord", type, 5000);
     }
 
     public const uint ColorRed = 0xFF0000C8;

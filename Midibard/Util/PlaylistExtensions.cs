@@ -4,8 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MidiBard.Util
+namespace HSC.Util
 {
+
+
+    /// <summary>
+    /// author akira045/Ori
+    /// </summary>
     public static class PlaylistExtensions
     {
         public static int GetIndex(this List<string> pl, string title)

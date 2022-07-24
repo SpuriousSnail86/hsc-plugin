@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MidiBard.Common.IPC
+namespace HSC.Common.IPC
 {
     public class SharedMemory
     {

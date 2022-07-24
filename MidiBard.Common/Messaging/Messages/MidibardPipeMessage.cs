@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MidiBard.Common.Messaging.Messages
+namespace HSC.Common.Messaging.Messages
 {
     public enum MidibardPipeMessageType { Playback, Playlist }
 

@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace MidiBard.Util
+namespace HSC.Util
 {
+
+    /// <summary>
+    /// author akira045/Ori
+    /// </summary>
     public class MMSongContainer
     {
         public List<MMSong> songs = new List<MMSong>();

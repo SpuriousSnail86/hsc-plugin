@@ -5,10 +5,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Dalamud.Logging;
-using MidiBard.Managers;
+using HSC.Memory;
 
-namespace MidiBard.Control.CharacterControl;
+namespace HSC.Control.CharacterControl;
 
+/// <summary>
+/// author: akira045/Ori
+/// </summary>
 static class PerformActions
 {
     internal delegate void DoPerformActionDelegate(IntPtr performInfoPtr, uint instrumentId, int a3 = 0);

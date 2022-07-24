@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static MidiBard.MidiBard;
+using static HSC.HSC;
 
-namespace MidiBard.Control.CharacterControl;
+namespace HSC.Control.CharacterControl;
 
+/// <summary>
+/// author: akira045/Ori
+/// </summary>
 class PerformanceEvents
 {
     private PerformanceEvents()
@@ -18,9 +21,9 @@ class PerformanceEvents
 
     private void EnteringPerformance()
     {
-        if (Configuration.config.AutoOpenPlayerWhenPerforming)
-            if (!SwitchInstrument.SwitchingInstrument)
-                Ui.Open();
+        //if (Configuration.config.AutoOpenPlayerWhenPerforming)
+        //    if (!SwitchInstrument.SwitchingInstrument)
+        //        Ui.Open();
 
         //_backgroundFrameLimit = AgentConfigSystem.BackgroundFrameLimit;
         //AgentConfigSystem.BackgroundFrameLimit = false;
@@ -29,9 +32,9 @@ class PerformanceEvents
 
     private void ExitingPerformance()
     {
-        if (Configuration.config.AutoOpenPlayerWhenPerforming)
-            if (!SwitchInstrument.SwitchingInstrument)
-                Ui.Close();
+        //if (Configuration.config.AutoOpenPlayerWhenPerforming)
+        //    if (!SwitchInstrument.SwitchingInstrument)
+        //        Ui.Close();
 
         //if (_backgroundFrameLimit is { } b && AgentConfigSystem.BackgroundFrameLimit != b)
         //{

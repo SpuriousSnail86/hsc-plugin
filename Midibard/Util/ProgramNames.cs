@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 using Melanchall.DryWetMidi.Common;
 using Melanchall.DryWetMidi.Core;
 
-namespace MidiBard.Util;
+namespace HSC.Util;
 
+
+/// <summary>
+/// author akira045/Ori
+/// </summary>
 internal static class ProgramNames
 {
     public static string GetGMProgramName(this ProgramChangeEvent programChangeEvent) => GetGMProgramName(programChangeEvent.ProgramNumber);

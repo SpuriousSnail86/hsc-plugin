@@ -1,4 +1,4 @@
-﻿using MidiBard.Common.Messaging.Messages;
+﻿using HSC.Common.Messaging.Messages;
 using System;
 using System.Collections.Generic;
 using System.IO.Pipes;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MidiBard.Common.IPC
+namespace HSC.Common.IPC
 {
     public class NamedPipeClient<T> : NamedPipe<T> where T : class
     {

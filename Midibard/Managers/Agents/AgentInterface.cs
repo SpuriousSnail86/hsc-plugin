@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace MidiBard.Managers.Agents;
+namespace HSC.Managers.Agents;
 
+/// <summary>
+/// author: akira045/Ori
+/// </summary>
 public unsafe class AgentInterface
 {
     public IntPtr Pointer { get; }

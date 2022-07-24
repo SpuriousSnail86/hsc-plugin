@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace MidiBard.Managers.Agents;
+namespace HSC.Managers.Agents;
 
+/// <summary>
+/// author: akira045/Ori
+/// </summary>
 public sealed unsafe class AgentPerformance : AgentInterface
 {
     public AgentPerformance(AgentInterface agentInterface) : base(agentInterface.Pointer, agentInterface.Id) { }
-    public static AgentPerformance Instance => MidiBard.AgentPerformance;
+    public static AgentPerformance Instance => HSC.AgentPerformance;
     public new AgentPerformanceStruct* Struct => (AgentPerformanceStruct*)Pointer;
 
     [StructLayout(LayoutKind.Explicit)]

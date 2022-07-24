@@ -2,8 +2,12 @@ using System.Text.RegularExpressions;
 using Lumina.Excel.GeneratedSheets;
 using Melanchall.DryWetMidi.Common;
 
-namespace MidiBard.Util;
+namespace HSC.Util;
 
+
+/// <summary>
+/// author akira045/Ori
+/// </summary>
 internal static class PerformExtensions
 {
     private static readonly Regex MidiProgramRegex = new(@"^([0-9]{3})(.+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);

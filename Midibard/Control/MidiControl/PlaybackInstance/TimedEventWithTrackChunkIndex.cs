@@ -2,7 +2,12 @@
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Interaction;
 
-namespace MidiBard.Control.MidiControl.PlaybackInstance;
+namespace HSC.Control.MidiControl.PlaybackInstance;
+
+/// <summary>
+/// author: akira045/Ori, modified by SpuriousSnail86
+/// </summary>
+
 
 public class TimedEventWithTrackChunkIndex : TimedEvent, IMetadata
 {

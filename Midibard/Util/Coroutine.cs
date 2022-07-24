@@ -5,8 +5,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MidiBard.Util;
+namespace HSC.Util;
 
+/// <summary>
+/// author akira045/Ori
+/// </summary>
 public static class Coroutine
 {
     /// <summary>

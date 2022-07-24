@@ -1,9 +1,13 @@
 ﻿using System.Linq;
 using Dalamud.Game.ClientState.Party;
-using MidiBard.DalamudApi;
+using HSC.DalamudApi;
 
-namespace MidiBard.Managers.Ipc;
+namespace HSC.Managers.Ipc;
 
+
+/// <summary>
+/// author akira045/Ori
+/// </summary>
 public static class PartyListExtensions
 {
     public static PartyMember? GetMeAsPartyMember(this PartyList PartyList) => PartyList.FirstOrDefault(i => i.ContentId == (long)api.ClientState.LocalContentId);

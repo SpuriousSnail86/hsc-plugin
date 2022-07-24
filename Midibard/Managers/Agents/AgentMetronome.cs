@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace MidiBard.Managers.Agents;
+namespace HSC.Managers.Agents;
 
+/// <summary>
+/// author: akira045/Ori
+/// </summary>
 public sealed unsafe class AgentMetronome : AgentInterface
 {
     public AgentMetronome(AgentInterface agentInterface) : base(agentInterface.Pointer, agentInterface.Id) { }
-    public static AgentMetronome Instance => MidiBard.AgentMetronome;
+    public static AgentMetronome Instance => HSC.AgentMetronome;
     public new unsafe AgentMetronomeStruct* Struct => (AgentMetronomeStruct*)Pointer;
 
     [StructLayout(LayoutKind.Explicit)]

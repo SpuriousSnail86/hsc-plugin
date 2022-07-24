@@ -10,11 +10,14 @@ using Dalamud.Game.Gui;
 using Dalamud.Logging;
 using Dalamud.Plugin;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
-using MidiBard.Managers.Agents;
-using static MidiBard.MidiBard;
+using HSC.Managers.Agents;
+using static HSC.HSC;
 
-namespace MidiBard;
+namespace HSC;
 
+/// <summary>
+/// author: akira045/Ori
+/// </summary>
 unsafe class AgentManager
 {
     internal List<AgentInterface> AgentTable { get; } = new List<AgentInterface>(400);

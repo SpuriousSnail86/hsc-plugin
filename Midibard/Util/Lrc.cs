@@ -7,8 +7,12 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Dalamud.Logging;
 
-namespace MidiBard
+namespace HSC
 {
+
+    /// <summary>
+    /// author akira045/Ori
+    /// </summary>
     public class Lrc
     {
         public static Lrc _lrc;

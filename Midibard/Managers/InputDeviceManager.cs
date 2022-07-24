@@ -9,10 +9,14 @@ using Dalamud.Logging;
 using Dalamud.Plugin;
 using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Multimedia;
-using MidiBard.DalamudApi;
+using HSC.DalamudApi;
+using HSC.Config;
 
-namespace MidiBard;
+namespace HSC;
 
+/// <summary>
+/// author: akira045 
+/// </summary>
 static class InputDeviceManager
 {
     internal static readonly Thread ScanMidiDeviceThread =
@@ -39,13 +43,13 @@ static class InputDeviceManager
                         }
                         else if (CurrentInputDevice is null)
                         {
-                            if (Configuration.config.autoRestoreListening)
+                            if (Configuration.config.AutoRestoreListening)
                             {
-                                if (devicesNames.Contains(Configuration.config.lastUsedMidiDeviceName))
+                                if (devicesNames.Contains(Configuration.config.LastUsedMidiDeviceName))
                                 {
-                                    PluginLog.Warning($"try restoring midi device: \"{Configuration.config.lastUsedMidiDeviceName}\"");
+                                    PluginLog.Warning($"try restoring midi device: \"{Configuration.config.LastUsedMidiDeviceName}\"");
                                     var newDevice = Devices?.FirstOrDefault(i =>
-                                        i.Name == Configuration.config.lastUsedMidiDeviceName);
+                                        i.Name == Configuration.config.LastUsedMidiDeviceName);
                                     if (newDevice != null)
                                     {
                                         SetDevice(newDevice);
@@ -100,7 +104,7 @@ static class InputDeviceManager
     internal static void SetDevice(InputDevice device)
     {
         DisposeCurrentInputDevice();
-        Configuration.config.lastUsedMidiDeviceName = device?.DeviceName();
+        Configuration.config.LastUsedMidiDeviceName = device?.DeviceName();
         if (device is null) return;
 
         try
@@ -109,15 +113,15 @@ static class InputDeviceManager
             CurrentInputDevice.SilentNoteOnPolicy = SilentNoteOnPolicy.NoteOff;
             CurrentInputDevice.EventReceived += InputDevice_EventReceived;
             CurrentInputDevice.StartEventsListening();
-            ImGuiUtil.AddNotification(NotificationType.Success,
-                "Start event listening on \"{0}\".".Localize(CurrentInputDevice.Name),
-                "Listening input device".Localize());
+            //ImGuiUtil.AddNotification(NotificationType.Success,
+            //    "Start event listening on \"{0}\".".Localize(CurrentInputDevice.Name),
+            //    "Listening input device".Localize());
         }
         catch (Exception e)
         {
-            ImGuiUtil.AddNotification(NotificationType.Error,
-                "\"{0}\" is not available now.\nPlease check log for further error information.".Localize(device.Name),
-                "Cannot start listening Midi device".Localize());
+            //ImGuiUtil.AddNotification(NotificationType.Error,
+            //    "\"{0}\" is not available now.\nPlease check log for further error information.".Localize(device.Name),
+            //    "Cannot start listening Midi device".Localize());
             PluginLog.Error(e, "midi device is possibly being occupied.");
             DisposeCurrentInputDevice();
         }
@@ -131,7 +135,7 @@ static class InputDeviceManager
         {
             CurrentInputDevice.EventReceived -= InputDevice_EventReceived;
             CurrentInputDevice.Dispose();
-            ImGuiUtil.AddNotification(NotificationType.Info, $"Stop event listening on \"{CurrentInputDevice.Name}\"	.", "Midi device disconnected");
+            //ImGuiUtil.AddNotification(NotificationType.Info, $"Stop event listening on \"{CurrentInputDevice.Name}\"	.", "Midi device disconnected");
         }
         catch (Exception e)
         {
@@ -147,6 +151,6 @@ static class InputDeviceManager
     private static void InputDevice_EventReceived(object sender, MidiEventReceivedEventArgs e)
     {
         //PluginLog.Verbose($"[{sender}]{e.Event}");
-        MidiBard.CurrentOutputDevice.SendEvent(e.Event);
+        HSC.CurrentOutputDevice.SendEvent(e.Event);
     }
 }

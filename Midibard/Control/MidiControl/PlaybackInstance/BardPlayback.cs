@@ -3,8 +3,11 @@ using Melanchall.DryWetMidi.Core;
 using Melanchall.DryWetMidi.Multimedia;
 using Melanchall.DryWetMidi.Interaction;
 
-namespace MidiBard.Control.MidiControl.PlaybackInstance;
+namespace HSC.Control.MidiControl.PlaybackInstance;
 
+/// <summary>
+/// author: akira045/Ori
+/// </summary>
 public sealed class BardPlayback : Playback
 {
     public BardPlayback(IEnumerable<ITimedObject> timedObjects, TempoMap tempoMap, MidiClockSettings clockSettings) : base(timedObjects, tempoMap, new PlaybackSettings(){ ClockSettings = clockSettings})
@@ -16,6 +19,6 @@ public sealed class BardPlayback : Playback
     {
         // Place your logic here
         // Return true if event played (sent to plug-in); false otherwise
-        return MidiBard.CurrentOutputDevice.SendEventWithMetadata(midiEvent, metadata);
+        return HSC.CurrentOutputDevice.SendEventWithMetadata(midiEvent, metadata);
     }
 }

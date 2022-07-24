@@ -219,19 +219,19 @@ namespace HSC.Control;
         return true;
     }
 
-    private static int GetInstrumentNoteDiff(int ins)
-    {
-        if (ins == 0)
-            return 0;
+    //private static int GetInstrumentNoteDiff(int ins)
+    //{
+    //    if (ins == 0)
+    //        return 0;
 
-        global::HSC.Instrument instrument = (global::HSC.Instrument)ins;
-        string insName = instrument.ToString();
+    //    global::HSC.Instrument instrument = (global::HSC.Instrument)ins;
+    //    string insName = instrument.ToString();
 
-        if (!Settings.InstrumentShifts.Offsets.ContainsKey(insName))
-            return 0;
+    //    if (!Settings.InstrumentShifts.Offsets.ContainsKey(insName))
+    //        return 0;
 
-        return Settings.InstrumentShifts.Offsets[instrument.ToString()] * 12;
-    }
+    //    return Settings.InstrumentShifts.Offsets[instrument.ToString()] * 12;
+    //}
 
 
     private static int GetTransposedNoteNum(int noteNum, int channel)

@@ -73,7 +73,6 @@ namespace HSC.Helpers
             if (HSC.IsPlaying)
                 MidiPlayerControl.Stop();
 
-            MidiMessageHandler.Stop();
             //ImGuiUtil.AddNotification(NotificationType.Error, "Cannot close instrument while playing.");
 
             if (HSC.CurrentInstrument == 0)

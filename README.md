@@ -3,4 +3,6 @@ This is a modified version of an old MidiBard fork/build (Midibard2 Preview) tha
 
 majority of the code is by myself, but the plugin does also use code from said MidiBard2 build
 
+I wholeheartedly credit the original authors of the code herein , despite whatever public claims have been made in attempts to slander me
+
 further notes will follow soon
